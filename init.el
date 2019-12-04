@@ -20,13 +20,14 @@
 (column-number-mode)
 (blink-cursor-mode -1)
 (transient-mark-mode -1)
-(setq-default indent-tabs-mode nil)
-(setq default-tab-width 4)
+(setq indent-tabs-mode nil)
+(setq default-tab-width 2)
 (display-time-mode t)
 (show-paren-mode t)
 (setq display-time-24hr-format 1)
 (setq-default fill-column 80)
 (display-battery-mode t)
+(setq inhibit-startup-message t)
 
 ;; Whitespace-mode (M-x whitespace-mode) zeigt
 ;; Whitespace-Unschönheiten an.  Tip: Spaces am Zeilenende mit M-x
@@ -45,8 +46,11 @@
 (require 'helm)
 (require 'helm-config)
 (require 'helm-projectile)
+(global-set-key (kbd "C-;") 'comment-line)
+
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
+(global-set-key (kbd "C-)") 'paredit-forward-slurp-sexp) ;sollte auch ohne das gehen!
 (global-unset-key (kbd "C-x c"))
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
@@ -74,6 +78,7 @@
   :init
   (with-eval-after-load 'winum
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  (setq projectile-switch-project-action 'treemacs-add-and-display-current-project)
   :config
   (progn
     (setq treemacs-collapse-dirs              (if (executable-find "python") 3 0)
@@ -119,6 +124,7 @@
        (treemacs-git-mode 'simple))))
   :bind
   (:map global-map
+	([f8] . treemacs)
         ("M-0"       . treemacs-select-window)
         ("C-x t 1"   . treemacs-delete-other-windows)
         ("C-x t t"   . treemacs)
@@ -126,23 +132,49 @@
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
 
-;;(use-package treemacs
-;;  :ensure t
-;;  :bind (([f8] . treemacs-toggle))
-;;  :init
-;;  (setq projectile-switch-project-action 'treemacs-projectile
-;;        treemacs-follow-after-init t
-;;        treemacs-git-integration t))
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
 
-;;(use-package treemacs-projectile
-;;  :after treemacs projectile
-;;  :ensure t)
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t)
+
+(use-package treemacs-icons-dired
+  :after treemacs dired
+  :ensure t)
+
+
+
+
+;; (setq
+ ;; python-shell-interpreter "ipython"
+ ;; python-shell-interpreter-args  "-i --simple-prompt"
+ ;; python-shell-prompt-detect-failure-warning nil)
 
 (setq
- python-shell-interpreter "ipython"
- python-shell-interpreter-args "-i --simple-prompt")
+ python-shell-interpreter "python"
+ python-shell-interpreter-args  "-i")
 
-;;(elpy-enable)
+
+(defun my-restart-python-console ()
+  "Restart python console before evaluate buffer or region to avoid various uncanny conflicts, like not reloding modules even when they are changed"
+  (interactive)
+  (if (get-buffer "*Python*")
+      (let ((kill-buffer-query-functions nil)) (kill-buffer "*Python*")))
+  (elpy-shell-send-region-or-buffer))
+
+(global-set-key (kbd "C-c C-x C-c") 'my-restart-python-console)
+(global-set-key (kbd "C->") 'python-indent-shift-right)
+(global-set-key (kbd "C-<") 'python-indent-shift-left)
+
+
+(elpy-enable)
+
+;; Enable Flycheck
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
 
 (add-hook 'lisp-mode-hook 'enable-paredit-mode)
 (add-hook 'clojure-mode-hook 'enable-paredit-mode)
@@ -150,8 +182,6 @@
 (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
 (add-hook 'python-mode-hook 'elpy-mode)
 
-;;(add-hook 'python-mode-hook 'anaconda-mode)
-;;(add-hook 'python-mode-hook 'anaconda-eldoc-mode)
 
 (global-set-key (kbd "C-x g") 'magit-status)
 (scroll-bar-mode -1)
@@ -170,11 +200,12 @@
  '(custom-enabled-themes (quote (deeper-blue)))
  '(package-selected-packages
    (quote
-    (treemacs-evil elpy ace-window julia-mode switch-window cider-hydra clj-refactor company cider helm helm-ag helm-projectile magit paredit paredit-everywhere projectile treemacs treemacs-projectile use-package))))
+    (treemacs-icons-dired treemacs-magit flycheck-pyflakes matlab-mode ein blacken flycheck scala-mode treemacs-evil elpy ace-window julia-mode switch-window cider-hydra clj-refactor company cider helm helm-ag helm-projectile magit paredit paredit-everywhere projectile treemacs treemacs-projectile use-package)))
+ '(python-indent-offset 2))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-(set-face-attribute 'default nil :height 140)
+(set-face-attribute 'default nil :height 125)
