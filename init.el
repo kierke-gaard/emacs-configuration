@@ -21,7 +21,7 @@
 (blink-cursor-mode -1)
 (transient-mark-mode -1)
 (setq indent-tabs-mode nil)
-(setq default-tab-width 2)
+(setq default-tab-width 4)
 (display-time-mode t)
 (show-paren-mode t)
 (setq display-time-24hr-format 1)
@@ -78,7 +78,6 @@
   :init
   (with-eval-after-load 'winum
     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-  (setq projectile-switch-project-action 'treemacs-add-and-display-current-project)
   :config
   (progn
     (setq treemacs-collapse-dirs              (if (executable-find "python") 3 0)
@@ -107,7 +106,7 @@
           treemacs-space-between-root-nodes   t
           treemacs-tag-follow-cleanup         t
           treemacs-tag-follow-delay           1.5
-          treemacs-width                      35)
+          treemacs-width                      40)
 
     ;; The default width and height of the icons is 22 pixels. If you are
     ;; using a Hi-DPI display, uncomment this to double the icon size.
@@ -132,6 +131,7 @@
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
 
+
 (use-package treemacs-projectile
   :after treemacs projectile
   :ensure t)
@@ -145,16 +145,14 @@
   :ensure t)
 
 
-
+(setq
+ python-shell-interpreter "ipython"
+ python-shell-interpreter-args  "-i --simple-prompt"
+ python-shell-prompt-detect-failure-warning nil)
 
 ;; (setq
- ;; python-shell-interpreter "ipython"
- ;; python-shell-interpreter-args  "-i --simple-prompt"
- ;; python-shell-prompt-detect-failure-warning nil)
-
-(setq
- python-shell-interpreter "python"
- python-shell-interpreter-args  "-i")
+ ;; python-shell-interpreter "python"
+ ;; python-shell-interpreter-args  "-i")
 
 
 (defun my-restart-python-console ()
@@ -183,6 +181,7 @@
 (add-hook 'python-mode-hook 'elpy-mode)
 
 
+
 (global-set-key (kbd "C-x g") 'magit-status)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -198,14 +197,17 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes (quote (deeper-blue)))
+ '(elpy-modules
+   (quote
+    (elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-pyvenv elpy-module-yasnippet elpy-module-autodoc elpy-module-sane-defaults)))
  '(package-selected-packages
    (quote
     (treemacs-icons-dired treemacs-magit flycheck-pyflakes matlab-mode ein blacken flycheck scala-mode treemacs-evil elpy ace-window julia-mode switch-window cider-hydra clj-refactor company cider helm helm-ag helm-projectile magit paredit paredit-everywhere projectile treemacs treemacs-projectile use-package)))
- '(python-indent-offset 2))
+ '(python-indent-offset 4))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-(set-face-attribute 'default nil :height 125)
+(set-face-attribute 'default nil :height 120)
