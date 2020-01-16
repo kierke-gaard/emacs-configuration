@@ -64,8 +64,6 @@
 (helm-mode 1)
 (helm-projectile-on)
 
-
-
 (recentf-mode 1)
 (setq recentf-max-saved-items 50)
 (global-set-key (kbd "C-x C-y") 'helm-recentf)
@@ -145,14 +143,12 @@
   :ensure t)
 
 
+;; PYTHON Settings
+
 (setq
  python-shell-interpreter "ipython"
  python-shell-interpreter-args  "-i --simple-prompt"
  python-shell-prompt-detect-failure-warning nil)
-
-;; (setq
- ;; python-shell-interpreter "python"
- ;; python-shell-interpreter-args  "-i")
 
 
 (defun my-restart-python-console ()
@@ -166,20 +162,18 @@
 (global-set-key (kbd "C->") 'python-indent-shift-right)
 (global-set-key (kbd "C-<") 'python-indent-shift-left)
 
-
 (elpy-enable)
 
-;; Enable Flycheck
-(when (require 'flycheck nil t)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
+;; if flake8 is used as backed, configure in ~/.flake8 global settings
+(define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+(define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
+
 
 (add-hook 'lisp-mode-hook 'enable-paredit-mode)
 (add-hook 'clojure-mode-hook 'enable-paredit-mode)
 (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
 (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
 (add-hook 'python-mode-hook 'elpy-mode)
-
 
 
 (global-set-key (kbd "C-x g") 'magit-status)
@@ -196,13 +190,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["black" "red3" "ForestGreen" "yellow3" "blue" "magenta3" "DeepSkyBlue" "gray50"])
  '(custom-enabled-themes (quote (deeper-blue)))
  '(elpy-modules
    (quote
     (elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-pyvenv elpy-module-yasnippet elpy-module-autodoc elpy-module-sane-defaults)))
  '(package-selected-packages
    (quote
-    (treemacs-icons-dired treemacs-magit flycheck-pyflakes matlab-mode ein blacken flycheck scala-mode treemacs-evil elpy ace-window julia-mode switch-window cider-hydra clj-refactor company cider helm helm-ag helm-projectile magit paredit paredit-everywhere projectile treemacs treemacs-projectile use-package)))
+    (treemacs-icons-dired treemacs-magit matlab-mode ein blacken scala-mode treemacs-evil elpy ace-window julia-mode switch-window cider-hydra clj-refactor company cider helm helm-ag helm-projectile magit paredit paredit-everywhere projectile treemacs treemacs-projectile use-package)))
  '(python-indent-offset 4))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
