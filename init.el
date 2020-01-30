@@ -168,12 +168,15 @@
 (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
 (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
 
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (add-hook 'lisp-mode-hook 'enable-paredit-mode)
 (add-hook 'clojure-mode-hook 'enable-paredit-mode)
 (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
 (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
 (add-hook 'python-mode-hook 'elpy-mode)
+(add-hook 'python-mode-hook 'flycheck-mode)
+
 
 
 (global-set-key (kbd "C-x g") 'magit-status)
