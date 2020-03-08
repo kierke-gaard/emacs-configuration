@@ -42,6 +42,7 @@
 
 ;; M-x package-install-selected-packages, anschließend die folgenden Blöcke
 ;; ent-kommentieren.
+(require 'sql)
 
 (require 'helm)
 (require 'helm-config)
@@ -169,6 +170,7 @@
 (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-hook 'blacken-buffer)
 
 (add-hook 'lisp-mode-hook 'enable-paredit-mode)
 (add-hook 'clojure-mode-hook 'enable-paredit-mode)
@@ -176,6 +178,25 @@
 (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
 (add-hook 'python-mode-hook 'elpy-mode)
 (add-hook 'python-mode-hook 'flycheck-mode)
+(add-hook 'python-mode-hook 'flymake-mode)
+
+(defun move-line-up ()
+  "Move up the current line."
+  (interactive)
+  (transpose-lines 1)
+  (forward-line -2)
+  (indent-according-to-mode))
+
+(defun move-line-down ()
+  "Move down the current line."
+  (interactive)
+  (forward-line 1)
+  (transpose-lines 1)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(global-set-key [(meta up)]  'move-line-up)
+(global-set-key [(meta down)]  'move-line-down)
 
 
 
@@ -203,7 +224,7 @@
     (elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-pyvenv elpy-module-yasnippet elpy-module-autodoc elpy-module-sane-defaults)))
  '(package-selected-packages
    (quote
-    (treemacs-icons-dired treemacs-magit matlab-mode ein blacken scala-mode treemacs-evil elpy ace-window julia-mode switch-window cider-hydra clj-refactor company cider helm helm-ag helm-projectile magit paredit paredit-everywhere projectile treemacs treemacs-projectile use-package)))
+    (fsharp-mode tuareg treemacs-icons-dired treemacs-magit matlab-mode ein blacken scala-mode treemacs-evil elpy ace-window julia-mode switch-window cider-hydra clj-refactor company cider helm helm-ag helm-projectile magit paredit paredit-everywhere projectile treemacs treemacs-projectile use-package)))
  '(python-indent-offset 4))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
