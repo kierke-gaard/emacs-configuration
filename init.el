@@ -153,6 +153,8 @@
 
 (set-language-environment "UTF-8")
 (elpy-enable)
+(setq elpy-shell-use-project-root nil)
+(setq python-remove-cwd-from-path nil)
 ;; (setq elpy-rpc-backend "jedi")
 ;; (add-hook 'python-mode-hook 'jedi:setup)
 ;; (add-hook 'python-mode-hook 'jedi:ac-setup)
@@ -193,8 +195,9 @@
 ;; (add-hook 'python-mode-hook 'flycheck-mode)
 
 
-;; (setq cider-eldoc-display-for-symbol-at-point t)
-;; (define-key cider-repl-mode-map (kbd "C-c M-b") 'cider-repl-clear-buffer)
+(setq cider-eldoc-display-for-symbol-at-point t)
+;; Todo Should only be in cider mode: define-key cider-repl-mode-map
+(global-set-key (kbd "C-c M-b") 'cider-repl-clear-buffer)
 
 
 (defun move-line-up ()
