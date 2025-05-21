@@ -4,8 +4,6 @@
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
 (package-initialize)
 
-(server-start)
-
 (setq backup-by-copying t
       backup-directory-alist '(("." . "~/.saves")) ; don't litter my fs tree
       delete-old-versions t
@@ -30,11 +28,7 @@
 (setq auto-save-file-name-transforms
           `((".*" ,(concat user-emacs-directory "auto-save/") t)))
 
-
-(require 'sql)
-
 (require 'helm)
-(require 'helm-config)
 (require 'helm-projectile)
 (global-set-key (kbd "C-;") 'comment-line)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
@@ -130,75 +124,13 @@
   :after treemacs dired
   :ensure t)
 
-
-;; PYTHON Settings
-
-(setq
- python-shell-interpreter "ipython"
- python-shell-interpreter-args  "-i --simple-prompt"
- python-shell-prompt-detect-failure-warning nil)
-
-
-(defun my-restart-python-console ()
-  "Restart python console before evaluate buffer or region to avoid various uncanny conflicts, like not reloding modules even when they are changed"
-  (interactive)
-  (if (get-buffer "*Python*")
-      (let ((kill-buffer-query-functions nil)) (kill-buffer "*Python*")))
-  (elpy-shell-send-region-or-buffer))
-
-;; ToDo only for python-map:
-(global-set-key (kbd "C-c C-x C-c") 'my-restart-python-console)
-(global-set-key (kbd "C->") 'python-indent-shift-right)
-(global-set-key (kbd "C-<") 'python-indent-shift-left)
-
-(set-language-environment "UTF-8")
-(elpy-enable)
-(setq elpy-shell-use-project-root nil)
-(setq python-remove-cwd-from-path nil)
-;; (setq elpy-rpc-backend "jedi")
-;; (add-hook 'python-mode-hook 'jedi:setup)
-;; (add-hook 'python-mode-hook 'jedi:ac-setup)
-;; (setq jedi:setup-keys t)                      ; optional
-;; (setq jedi:complete-on-dot t)                 ; optional
-;; (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
-;; resolve elpy-rpc error on windows
-
-(pyenv-mode)
-
-(setenv "PYTHONIOENCODING" "utf-8")
-;; (add-to-list 'process-coding-system-alist '("elpy" . (utf-8 . utf-8)))
-;; (add-to-list 'process-coding-system-alist '("python" . (utf-8 . utf-8)))
-;; (add-to-list 'process-coding-system-alist '("flake8" . (utf-8 . utf-8)))
-
-(defun elpy--xref-backend ()
- "Return the name of the elpy xref backend."
- (if (or (and (not (elpy-rpc--process-buffer-p elpy-rpc--buffer))
-              (elpy-rpc--get-rpc-buffer))
-         elpy-rpc--jedi-available)
-     'elpy
-   nil))
-
-
-;; if flake8 is used as backed, configure in ~/.flake8 global settings
-(define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
-(define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
-
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-;; (add-hook 'before-save-hook 'blacken-buffer)
-
 (add-hook 'lisp-mode-hook 'enable-paredit-mode)
 (add-hook 'clojure-mode-hook 'enable-paredit-mode)
-;; (add-hook 'clojure-mode-hook 'cider-turn-on-eldoc-mode)
 (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
-(add-hook 'prog-mode-hook 'paredit-everywhere-mode)
-(add-hook 'python-mode-hook 'elpy-mode)
-;; (add-hook 'python-mode-hook 'flycheck-mode)
-
 
 (setq cider-eldoc-display-for-symbol-at-point t)
-;; Todo Should only be in cider mode: define-key cider-repl-mode-map
 (global-set-key (kbd "C-c M-b") 'cider-repl-clear-buffer)
-
 
 (defun move-line-up ()
   "Move up the current line."
@@ -246,7 +178,7 @@
  '(package-selected-packages
    (quote
     (csv-mode pyenv-mode jedi fsharp-mode tuareg treemacs-icons-dired treemacs-magit matlab-mode ein blacken scala-mode treemacs-evil elpy ace-window julia-mode switch-window cider-hydra clj-refactor company cider helm helm-ag helm-projectile magit paredit paredit-everywhere projectile treemacs treemacs-projectile use-package)))
- '(python-indent-offset 4))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
